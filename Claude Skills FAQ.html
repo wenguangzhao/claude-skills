@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Claude Skills FAQ</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Speculation Rules API: Prerender test-page-1.html -->
+    <script type="speculationrules">
+      {
+        "prerender": [
+          {
+            "urls": ["test-page-1.html"]
+          }
+        ]
+      }
+    </script>
   </head>
   <body class="bg-gray-100 text-gray-900 p-6">
     <div class="max-w-3xl mx-auto">
@@ -345,6 +355,39 @@
       <footer class="text-center text-gray-500 text-xs mt-6">
         Claude Skills FAQ - 2025
       </footer>
+
+      <!-- Speculation Rules API Test Links -->
+      <section class="bg-white rounded-lg shadow p-5 mt-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-3">
+          🧪 Speculation Rules API テスト
+        </h3>
+        <p class="text-sm text-gray-600 mb-4">
+          以下のリンクをクリックして、プリレンダリングの効果を比較してください
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a
+            href="test-page-1.html"
+            class="block bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-4 hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-lg"
+          >
+            <div class="font-bold text-lg mb-1">🚀 Test Page 1</div>
+            <div class="text-sm opacity-90">Prerendered - 瞬時に表示</div>
+          </a>
+          <a
+            href="test-page-2.html"
+            class="block bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg p-4 hover:from-blue-600 hover:to-cyan-600 transition-all transform hover:scale-105 shadow-lg"
+          >
+            <div class="font-bold text-lg mb-1">📄 Test Page 2</div>
+            <div class="text-sm opacity-90">Normal Load - 通常ロード</div>
+          </a>
+        </div>
+        <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-500 p-3">
+          <p class="text-xs text-yellow-800">
+            <strong>💡 ヒント:</strong> Test Page
+            1は自動的にバックグラウンドでプリレンダリングされます。
+            両方のページをクリックして、ロード速度の違いを体感してください。
+          </p>
+        </div>
+      </section>
     </div>
   </body>
 </html>
