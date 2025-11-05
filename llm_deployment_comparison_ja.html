@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ローカルLLM展開オプション - 技術評価レポート</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 leading-relaxed">
+    <div class="max-w-5xl mx-auto px-6 py-8">
+        <!-- Header -->
+        <header class="mb-8 border-b-2 border-gray-300 pb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">ローカルLLM展開における<br>プラットフォーム比較分析</h1>
+            <p class="text-sm text-gray-600">金融サービス企業向け技術評価 | 2025年11月</p>
+        </header>
+
+        <!-- Executive Summary -->
+        <section class="mb-10 bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r">
+            <h2 class="text-2xl font-bold text-blue-900 mb-4">エグゼクティブサマリー</h2>
+            <div class="space-y-3 text-sm">
+                <p class="font-semibold text-blue-800">💡 <strong>結論：</strong>モデルサイズが選択の決定要因となります</p>
+                <div class="grid md:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-white p-4 rounded border border-blue-200">
+                        <h3 class="font-bold text-blue-900 mb-2">🪟 Windows + NVIDIA RTX推奨</h3>
+                        <ul class="text-xs space-y-1 text-gray-700">
+                            <li>• 30B以下のパラメータモデル</li>
+                            <li>• トークン生成速度: 127 t/s (M2 Ultraの1.7倍)</li>
+                            <li>• 初期コスト: ¥280万〜¥420万</li>
+                            <li>• 導入期間: 30-60分</li>
+                            <li>• アップグレード柔軟性: 高</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-4 rounded border border-blue-200">
+                        <h3 class="font-bold text-blue-900 mb-2">🍎 Mac Studio推奨</h3>
+                        <ul class="text-xs space-y-1 text-gray-700">
+                            <li>• 70B以上のパラメータモデル</li>
+                            <li>• 統合メモリ: 最大512GB</li>
+                            <li>• 初期コスト: ¥60万〜¥143万</li>
+                            <li>• 3年間TCO: ¥34.2万純コスト</li>
+                            <li>• 静音動作: 20dB未満</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-600 mt-3 bg-yellow-50 p-2 rounded">⚠️ <strong>金融業界への注意:</strong> 証券取引、コンプライアンス分析、リスク管理には70B以上のモデルが推奨されます。Mac Studioは唯一の¥150万以下のコンシューマーオプションです。</p>
+            </div>
+        </section>
+
+        <!-- Key Decision Matrix -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">選択マトリックス</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs bg-white shadow-sm rounded">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-3 text-left font-semibold">評価項目</th>
+                            <th class="p-3 text-left font-semibold">Windows RTX 4090</th>
+                            <th class="p-3 text-left font-semibold">Mac Studio M3 Ultra</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        <tr>
+                            <td class="p-3 font-medium">最大モデルサイズ</td>
+                            <td class="p-3">30B (24GB VRAM制限)</td>
+                            <td class="p-3 bg-green-50">70B〜405B (512GB統合メモリ)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">8Bモデル推論速度</td>
+                            <td class="p-3 bg-green-50">127 t/s</td>
+                            <td class="p-3">76 t/s</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">70Bモデル対応</td>
+                            <td class="p-3 text-red-600">不可（デュアルGPU必須: ¥93万〜¥125万）</td>
+                            <td class="p-3 bg-green-50">可能（12 t/s）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">初期ハードウェア費用</td>
+                            <td class="p-3 bg-green-50">¥280万〜¥420万（新品）<br>¥165万〜¥235万（中古RTX 3090）</td>
+                            <td class="p-3">96GB: ¥60万 / 192GB: ¥84万 / 512GB: ¥143万</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">年間電力コスト</td>
+                            <td class="p-3">¥4.6万（550-650W）</td>
+                            <td class="p-3 bg-green-50">¥1.4万（160-180W）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">3年間総保有コスト</td>
+                            <td class="p-3">¥59万純コスト</td>
+                            <td class="p-3 bg-green-50">¥34.2万純コスト（¥24.8万差）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">セットアップ時間</td>
+                            <td class="p-3">30-60分（技術的複雑性高）</td>
+                            <td class="p-3 bg-green-50">10-15分（シンプル）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">稼働音</td>
+                            <td class="p-3">30-40dB（単体）/ 40-50dB（デュアル）</td>
+                            <td class="p-3 bg-green-50">20dB未満</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">アップグレード性</td>
+                            <td class="p-3 bg-green-50">高（GPU単体交換可能）</td>
+                            <td class="p-3">低（システム全体交換）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">3年後リセール価値</td>
+                            <td class="p-3">20-30%</td>
+                            <td class="p-3 bg-green-50">40-50%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Technical Architecture -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">技術アーキテクチャの比較</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-lg shadow-sm border">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3">NVIDIA ディスクリートGPU</h3>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li><strong>VRAM:</strong> RTX 4090は24GB GDDR6X</li>
+                        <li><strong>メモリ帯域幅:</strong> 1,008GB/s（M2 Ultraより25%高速）</li>
+                        <li><strong>制約:</strong> 24GB超過時はPCIe経由でシステムRAMへ（31倍の遅延）</li>
+                        <li><strong>計算性能:</strong> 82.58 TFLOPS</li>
+                        <li class="text-red-600 text-xs">⚠️ LLaMA 3 70Bは単体GPUでは物理的に不可能</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-sm border">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3">Apple Silicon 統合メモリ</h3>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li><strong>統合メモリ:</strong> M3 Ultra最大512GB</li>
+                        <li><strong>メモリ帯域幅:</strong> 819GB/s</li>
+                        <li><strong>利点:</strong> CPU/GPU間のデータコピー不要</li>
+                        <li><strong>GPU割当:</strong> 総メモリの約75%</li>
+                        <li class="text-green-600 text-xs">✓ 70B FP16モデル（140GB）が単体で動作可能</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Benchmarks -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">実測パフォーマンスベンチマーク</h2>
+            <div class="bg-white p-5 rounded-lg shadow-sm">
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div class="text-center p-4 bg-blue-50 rounded">
+                        <div class="text-2xl font-bold text-blue-900">1.7倍</div>
+                        <div class="text-xs text-gray-600">RTX 4090のトークン生成速度優位性<br>(8Bモデル)</div>
+                    </div>
+                    <div class="text-center p-4 bg-green-50 rounded">
+                        <div class="text-2xl font-bold text-green-900">6.7倍</div>
+                        <div class="text-xs text-gray-600">プロンプト処理速度差<br>(6,898 vs 1,024 t/s)</div>
+                    </div>
+                    <div class="text-center p-4 bg-purple-50 rounded">
+                        <div class="text-2xl font-bold text-purple-900">128K</div>
+                        <div class="text-xs text-gray-600">Mac Studio最大コンテキスト長<br>(RTX 4090は32K-57Kで性能低下)</div>
+                    </div>
+                </div>
+                <table class="w-full text-xs mt-4">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="p-2 text-left">モデル / 構成</th>
+                            <th class="p-2 text-right">RTX 4090</th>
+                            <th class="p-2 text-right">M2 Ultra (192GB)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y text-gray-700">
+                        <tr>
+                            <td class="p-2">LLaMA 3 8B Q4_K_M</td>
+                            <td class="p-2 text-right font-semibold">127.74 t/s</td>
+                            <td class="p-2 text-right">76.28 t/s</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">LLaMA 3 70B Q4_K_M</td>
+                            <td class="p-2 text-right text-red-600">不可能（デュアル: 19.06 t/s）</td>
+                            <td class="p-2 text-right font-semibold">12.13 t/s</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">Mixtral 30B MoE (4K)</td>
+                            <td class="p-2 text-right font-semibold">195.78 t/s</td>
+                            <td class="p-2 text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">70B FP16</td>
+                            <td class="p-2 text-right text-red-600">6-8 GPU必要（¥225万以上）</td>
+                            <td class="p-2 text-right font-semibold">4.71 t/s</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Software Ecosystem -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">ソフトウェアエコシステム</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-lg shadow-sm border">
+                    <h3 class="text-base font-bold text-gray-800 mb-3">クロスプラットフォーム</h3>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li>✓ <strong>llama.cpp:</strong> Metal/CUDA最適化済み</li>
+                        <li>✓ <strong>Ollama:</strong> 両プラットフォームで優れたUX</li>
+                        <li>✓ <strong>LM Studio:</strong> GUIインターフェース</li>
+                        <li>✓ <strong>GGUF量子化:</strong> 4-4.5GB (Q4_K_M)、5%品質低下</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-sm border">
+                    <h3 class="text-base font-bold text-gray-800 mb-3">プラットフォーム専用</h3>
+                    <div class="text-sm space-y-3">
+                        <div>
+                            <div class="font-semibold text-blue-600">Windows専用:</div>
+                            <ul class="text-xs mt-1 space-y-1 text-gray-600">
+                                <li>• TensorRT-LLM (4-5倍高速化)</li>
+                                <li>• vLLM (高スループットサービング)</li>
+                                <li>• ExLlamaV2 (EXL2量子化)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-600">Mac専用:</div>
+                            <ul class="text-xs mt-1 space-y-1 text-gray-600">
+                                <li>• MLX (統合メモリ最適化)</li>
+                                <li>• mlx-lm, mlx-vlm</li>
+                                <li>• Metal FlashAttention</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Case Recommendations -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">金融業界向けユースケース別推奨</h2>
+            <div class="space-y-4">
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-5 rounded-lg border-l-4 border-blue-600">
+                    <h3 class="font-bold text-blue-900 mb-2">🏦 外国為替取引分析・リスク管理</h3>
+                    <p class="text-sm text-gray-700 mb-2"><strong>推奨:</strong> Mac Studio M3 Ultra 192GB (¥84万)</p>
+                    <ul class="text-xs space-y-1 text-gray-600">
+                        <li>• 70Bモデルで多言語市場分析、複雑なリスク計算</li>
+                        <li>• 128Kコンテキストで過去取引データ分析</li>
+                        <li>• 静音動作でトレーディングフロア配置可能</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-r from-green-50 to-green-100 p-5 rounded-lg border-l-4 border-green-600">
+                    <h3 class="font-bold text-green-900 mb-2">📊 顧客対応・FAQ自動化</h3>
+                    <p class="text-sm text-gray-700 mb-2"><strong>推奨:</strong> Windows RTX 4090 (¥280万) または中古RTX 3090 (¥165万)</p>
+                    <ul class="text-xs space-y-1 text-gray-600">
+                        <li>• 7B-13Bモデルで十分、127 t/s高速応答</li>
+                        <li>• 複数同時リクエスト処理に有利</li>
+                        <li>• 低初期コストで導入可能</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-r from-purple-50 to-purple-100 p-5 rounded-lg border-l-4 border-purple-600">
+                    <h3 class="font-bold text-purple-900 mb-2">📝 コンプライアンス文書分析</h3>
+                    <p class="text-sm text-gray-700 mb-2"><strong>推奨:</strong> Mac Studio M3 Ultra 256GB (¥107万)</p>
+                    <ul class="text-xs space-y-1 text-gray-600">
+                        <li>• 70B-100Bモデルで規制文書の精密解析</li>
+                        <li>• 長文契約書の全文コンテキスト処理</li>
+                        <li>• セキュリティ：オフライン動作、データ外部流出なし</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cost Analysis -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">3年間総保有コスト分析（TCO）</h2>
+            <div class="bg-white p-5 rounded-lg shadow-sm">
+                <table class="w-full text-xs">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="p-2 text-left">項目</th>
+                            <th class="p-2 text-right">RTX 4090</th>
+                            <th class="p-2 text-right">M3 Ultra 96GB</th>
+                            <th class="p-2 text-right">差額</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y text-gray-700">
+                        <tr>
+                            <td class="p-2">初期ハードウェア</td>
+                            <td class="p-2 text-right">¥400,000</td>
+                            <td class="p-2 text-right">¥599,900</td>
+                            <td class="p-2 text-right text-red-600">+¥199,900</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">3年間電気代（8h/日）</td>
+                            <td class="p-2 text-right">¥137,700</td>
+                            <td class="p-2 text-right">¥40,950</td>
+                            <td class="p-2 text-right text-green-600">-¥96,750</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">メンテナンス・冷却</td>
+                            <td class="p-2 text-right">¥45,000</td>
+                            <td class="p-2 text-right">¥15,000</td>
+                            <td class="p-2 text-right text-green-600">-¥30,000</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="p-2 font-semibold">総コスト</td>
+                            <td class="p-2 text-right font-semibold">¥582,700</td>
+                            <td class="p-2 text-right font-semibold">¥655,850</td>
+                            <td class="p-2 text-right">+¥73,150</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">3年後リセール価値</td>
+                            <td class="p-2 text-right text-red-600">-¥120,000 (30%)</td>
+                            <td class="p-2 text-right text-green-600">-¥269,955 (45%)</td>
+                            <td class="p-2 text-right text-green-600">-¥149,955</td>
+                        </tr>
+                        <tr class="bg-blue-50 font-bold">
+                            <td class="p-2">純コスト（リセール後）</td>
+                            <td class="p-2 text-right">¥462,700</td>
+                            <td class="p-2 text-right text-green-600">¥385,895</td>
+                            <td class="p-2 text-right text-green-600 text-base">-¥76,805 有利</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-xs text-gray-600 mt-3">* 電気代は¥0.15/kWh、RTX 4090システム全体650W、M3 Ultra 180Wで計算</p>
+            </div>
+        </section>
+
+        <!-- Implementation Considerations -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">導入時の考慮事項</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-lg shadow-sm border">
+                    <h3 class="text-base font-bold text-red-700 mb-3">⚠️ 注意点</h3>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li><strong>Mac:</strong> GPUアクセラレーション付きVM/コンテナ不可（セキュリティ隔離制限）</li>
+                        <li><strong>Windows:</strong> 複数GPU構成時のNUMAレイテンシー、PCIe帯域制限</li>
+                        <li><strong>両方:</strong> 量子化による品質低下（Q4で約5%）</li>
+                        <li><strong>金融規制:</strong> データ保存場所、監査ログ要件の確認必須</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-sm border">
+                    <h3 class="text-base font-bold text-green-700 mb-3">✓ ベストプラクティス</h3>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li><strong>段階的導入:</strong> 小規模POCから開始（7B-13Bモデル）</li>
+                        <li><strong>量子化選択:</strong> GGUF Q4_K_Mが品質とサイズのバランス最良</li>
+                        <li><strong>バックアップ:</strong> モデルファイルは外部ストレージに保管</li>
+                        <li><strong>監視:</strong> 推論速度、メモリ使用率の継続モニタリング</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendations -->
+        <section class="mb-10 bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg border-2 border-gray-300">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">🎯 推奨アクション</h2>
+            <div class="space-y-3 text-sm">
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h3 class="font-bold text-blue-900 mb-2">1. 短期（即時〜3ヶ月）</h3>
+                    <ul class="text-xs space-y-1 text-gray-700 ml-4">
+                        <li>• POC実施：Ollama + LLaMA 3 8Bで顧客FAQ対応テスト</li>
+                        <li>• プラットフォーム: 既存Windows PCまたはMacで評価</li>
+                        <li>• 投資: ¥0（既存ハードウェア利用）</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h3 class="font-bold text-green-900 mb-2">2. 中期（3〜6ヶ月）</h3>
+                    <ul class="text-xs space-y-1 text-gray-700 ml-4">
+                        <li>• 本番導入：業務要件に基づきプラットフォーム決定</li>
+                        <li>• コンプライアンス/市場分析: Mac Studio M3 Ultra 192GB (¥84万)</li>
+                        <li>• 顧客対応自動化: Windows RTX 3090中古 (¥165万)</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h3 class="font-bold text-purple-900 mb-2">3. 長期（6〜12ヶ月）</h3>
+                    <ul class="text-xs space-y-1 text-gray-700 ml-4">
+                        <li>• スケーリング: 複数ユースケース展開、マルチモデル環境構築</li>
+                        <li>• 社内エキスパート育成: ファインチューニング、RAG統合</li>
+                        <li>• 評価: 次世代ハードウェア（RTX 5000シリーズ、M4 Ultra）検討</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-6 border-t border-gray-300 text-xs text-gray-600 text-center">
+            <p>本レポートは2025年11月時点の技術情報に基づいています。最新の製品仕様・価格は各ベンダーにご確認ください。</p>
+            <p class="mt-2">データソース: GitHub LLM Benchmarks, Hardware Corner, Creative Strategies, 各種技術文献</p>
+        </footer>
+    </div>
+</body>
+</html>
