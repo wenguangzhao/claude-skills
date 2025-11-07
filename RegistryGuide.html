@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shadcn Registry カタログ</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="text-3xl font-bold text-slate-800 mb-1">shadcn Registry カタログ</h1>
+            <p class="text-sm text-slate-600">35+の公式対応コンポーネントライブラリ</p>
+        </div>
+
+        <!-- Introduction -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 mb-4">
+            <h2 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                <span class="text-xl">📦</span> shadcn Registryとは？
+            </h2>
+            <div class="space-y-2 text-sm text-slate-700">
+                <p><strong class="text-blue-600">shadcn/ui</strong>は、コンポーネントをインストールして使用できる革新的なシステムを提供しています。npmパッケージとして配布するのではなく、<strong class="text-blue-600">コードを直接プロジェクトにコピー</strong>する方式を採用。これにより完全なカスタマイズが可能です。</p>
+                <p>さらに、<strong class="text-indigo-600">Registry System</strong>により、shadcn公式コンポーネントだけでなく、<strong class="text-indigo-600">サードパーティが提供する高品質なコンポーネントライブラリ</strong>も同じCLIコマンドで簡単にインストールできます：</p>
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-200 mt-2">
+                    <code class="text-xs text-slate-800 block mb-1">// 公式コンポーネント</code>
+                    <code class="text-xs bg-slate-800 text-green-400 px-2 py-1 rounded">npx shadcn add button</code>
+                    <code class="text-xs text-slate-800 block mt-2 mb-1">// サードパーティレジストリ</code>
+                    <code class="text-xs bg-slate-800 text-green-400 px-2 py-1 rounded">npx shadcn add @magicui/animated-beam</code>
+                </div>
+                <p class="pt-2">追加の設定やインストールは一切不要。<strong class="text-purple-600">1コマンドでコンポーネントがプロジェクトに追加</strong>され、すぐにカスタマイズして使用できます。</p>
+            </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-4">
+            <div class="flex flex-wrap gap-2 justify-center text-xs">
+                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">🎨 アニメーション</span>
+                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">🤖 AI対応</span>
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">📊 データ管理</span>
+                <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full">🔐 認証</span>
+                <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full">💰 決済</span>
+                <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">📝 フォーム</span>
+            </div>
+        </div>
+
+        <!-- Registries Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            
+            <!-- AI & Audio -->
+            <div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg p-4 border border-purple-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🤖</span>
+                    <h3 class="text-sm font-bold text-slate-800">@ai-elements</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">AIアプリの事前構築コンポーネント。会話UI、メッセージ表示など、AI機能を素早く実装可能</p>
+                <div class="text-xs text-purple-600 font-medium">AI開発の高速化</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-4 border border-indigo-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🔍</span>
+                    <h3 class="text-sm font-bold text-slate-800">@algolia</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">エンタープライズグレードのAI検索インフラ。ユーザー行動を理解し、最適な検索結果を表示</p>
+                <div class="text-xs text-indigo-600 font-medium">高度な検索機能</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-violet-50 to-purple-50 rounded-lg p-4 border border-violet-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎙️</span>
+                    <h3 class="text-sm font-bold text-slate-800">@elevenlabs-ui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">ElevenLabsのエージェントとオーディオコンポーネント。音声AI機能をアプリに統合</p>
+                <div class="text-xs text-violet-600 font-medium">音声AI統合</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">💬</span>
+                    <h3 class="text-sm font-bold text-slate-800">@prompt-kit</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">AIアプリのコアビルディングブロック。高品質でアクセシブルなAIインターフェース構築</p>
+                <div class="text-xs text-purple-600 font-medium">AIインターフェース</div>
+            </div>
+
+            <!-- Animation & Motion -->
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">✨</span>
+                    <h3 class="text-sm font-bold text-slate-800">@magicui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">150+の無料アニメーションコンポーネント。React、TypeScript、Motionで構築された高品質エフェクト</p>
+                <div class="text-xs text-blue-600 font-medium">大規模アニメーションライブラリ</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg p-4 border border-cyan-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎬</span>
+                    <h3 class="text-sm font-bold text-slate-800">@motion-primitives</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">美しくデザインされたモーションコンポーネント。エンジニアとデザイナー向けに最適化</p>
+                <div class="text-xs text-cyan-600 font-medium">モーションデザイン</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎭</span>
+                    <h3 class="text-sm font-bold text-slate-800">@animate-ui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">完全アニメーション化されたReactコンポーネント。プリミティブ、コンポーネント、アイコンを網羅</p>
+                <div class="text-xs text-blue-600 font-medium">フルアニメーション</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-lg p-4 border border-teal-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🌊</span>
+                    <h3 class="text-sm font-bold text-slate-800">@scrollxui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">モーション駆動のインタラクティブコンポーネント。ShadCNと完全互換</p>
+                <div class="text-xs text-teal-600 font-medium">スクロールアニメーション</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-sky-50 to-blue-50 rounded-lg p-4 border border-sky-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎨</span>
+                    <h3 class="text-sm font-bold text-slate-800">@aceternity</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">MotionとTailwindで構築された現代的なライブラリ。ランディングページを100倍美しく</p>
+                <div class="text-xs text-sky-600 font-medium">ランディングページ向け</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-violet-50 rounded-lg p-4 border border-blue-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎪</span>
+                    <h3 class="text-sm font-bold text-slate-800">@react-bits</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">大規模なアニメーション＆インタラクティブコンポーネント集。テキストアニメーションから背景効果まで</p>
+                <div class="text-xs text-blue-600 font-medium">インタラクティブUI</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4 border border-indigo-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🌟</span>
+                    <h3 class="text-sm font-bold text-slate-800">@kokonutui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">Tailwind CSS、shadcn/ui、Motionで構築された美麗なコンポーネント集</p>
+                <div class="text-xs text-indigo-600 font-medium">プレミアム品質</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-violet-50 to-fuchsia-50 rounded-lg p-4 border border-violet-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎯</span>
+                    <h3 class="text-sm font-bold text-slate-800">@cult-ui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">厳選されたheadlessコンポーネント。Framer Motionで上品にアニメーション化</p>
+                <div class="text-xs text-violet-600 font-medium">キュレーション品質</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg p-4 border border-cyan-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">💎</span>
+                    <h3 class="text-sm font-bold text-slate-800">@reui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">UIコンポーネントとアニメーション効果のコレクション。shadcn/uiと完璧に調和</p>
+                <div class="text-xs text-cyan-600 font-medium">統合性重視</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🌈</span>
+                    <h3 class="text-sm font-bold text-slate-800">@spectrumui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">shadcn/uiとTailwind CSSで構築。エレガントでレスポンシブ、滑らかなアニメーション</p>
+                <div class="text-xs text-purple-600 font-medium">高品質インターフェース</div>
+            </div>
+
+            <!-- Style Variants -->
+            <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg p-4 border border-orange-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎮</span>
+                    <h3 class="text-sm font-bold text-slate-800">@8bitcn</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">8ビットスタイルのレトロコンポーネント。ノスタルジックなUIを構築</p>
+                <div class="text-xs text-orange-600 font-medium">レトロデザイン</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg p-4 border border-rose-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">⚡</span>
+                    <h3 class="text-sm font-bold text-slate-800">@retroui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">ネオブルータリズムスタイルのReact + TailwindCSS UI。大胆でモダンなWebアプリ構築</p>
+                <div class="text-xs text-rose-600 font-medium">ブルータリズム</div>
+            </div>
+
+            <!-- Forms & Data -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">📝</span>
+                    <h3 class="text-sm font-bold text-slate-800">@formcn</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">数クリックで本番環境対応のフォームを構築。shadcnコンポーネントと現代的ツール使用</p>
+                <div class="text-xs text-green-600 font-medium">フォーム特化</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg p-4 border border-emerald-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">📋</span>
+                    <h3 class="text-sm font-bold text-slate-800">@wandry-ui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">完全制御可能なReact Inertiaフォーム要素のセット</p>
+                <div class="text-xs text-emerald-600 font-medium">Inertia統合</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-lg p-4 border border-teal-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">📊</span>
+                    <h3 class="text-sm font-bold text-slate-800">@lytenyte</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">高性能・軽量・headlessなReactデータグリッド。Tailwind＆Shadcnテーマ対応</p>
+                <div class="text-xs text-teal-600 font-medium">データテーブル</div>
+            </div>
+
+            <!-- Authentication & Payments -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🔐</span>
+                    <h3 class="text-sm font-bold text-slate-800">@clerk</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">認証とユーザー管理を最も簡単に実装。React、Next.js、Remix向けに特化</p>
+                <div class="text-xs text-blue-600 font-medium">認証ソリューション</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-lg p-4 border border-green-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">💰</span>
+                    <h3 class="text-sm font-bold text-slate-800">@billingsdk</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">SaaSの請求・決済コンポーネントライブラリ。サブスク、請求書、使用量ベース課金に対応</p>
+                <div class="text-xs text-green-600 font-medium">課金システム</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg p-4 border border-emerald-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🗄️</span>
+                    <h3 class="text-sm font-bold text-slate-800">@supabase</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">フロントエンドとSupabaseバックエンドを1コマンドで接続するReactコンポーネント</p>
+                <div class="text-xs text-emerald-600 font-medium">バックエンド統合</div>
+            </div>
+
+            <!-- Utilities -->
+            <div class="bg-gradient-to-br from-violet-50 to-purple-50 rounded-lg p-4 border border-violet-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🪝</span>
+                    <h3 class="text-sm font-bold text-slate-800">@hooks</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">Shadcnで構築された包括的なReact Hooksコレクション</p>
+                <div class="text-xs text-violet-600 font-medium">フック集</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🔗</span>
+                    <h3 class="text-sm font-bold text-slate-800">@nuqs</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">型安全なURL状態管理のためのカスタムパーサー、アダプター、ユーティリティ</p>
+                <div class="text-xs text-blue-600 font-medium">URL状態管理</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg p-4 border border-orange-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">📤</span>
+                    <h3 class="text-sm font-bold text-slate-800">@better-upload</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">シンプルで簡単なファイルアップロード。S3互換サービスへ最小限のセットアップで直接アップロード</p>
+                <div class="text-xs text-orange-600 font-medium">ファイル管理</div>
+            </div>
+
+            <!-- Blocks & Themes -->
+            <div class="bg-gradient-to-br from-slate-100 to-gray-100 rounded-lg p-4 border border-slate-300 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🧱</span>
+                    <h3 class="text-sm font-bold text-slate-800">@shadcnblocks</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">shadcn ui用の数百の追加ブロックを提供するレジストリ</p>
+                <div class="text-xs text-slate-600 font-medium">大規模ブロック集</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-gray-50 to-slate-50 rounded-lg p-4 border border-gray-300 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎨</span>
+                    <h3 class="text-sm font-bold text-slate-800">@shadcndesign</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">高品質なブロックとテーマのコレクション。継続的に成長中</p>
+                <div class="text-xs text-gray-600 font-medium">デザインテンプレート</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-50 to-zinc-50 rounded-lg p-4 border border-slate-300 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">⚡</span>
+                    <h3 class="text-sm font-bold text-slate-800">@zippystarter</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">expertly crafted - 専門的に作られたブロック、コンポーネント、テーマ</p>
+                <div class="text-xs text-slate-600 font-medium">スターターキット</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-zinc-50 to-stone-50 rounded-lg p-4 border border-zinc-300 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🏗️</span>
+                    <h3 class="text-sm font-bold text-slate-800">@blocks</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">クリーンでモダンなアプリケーション構築ブロック。無料でオープンソース</p>
+                <div class="text-xs text-zinc-600 font-medium">アプリビルディング</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-sky-50 rounded-lg p-4 border border-blue-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎯</span>
+                    <h3 class="text-sm font-bold text-slate-800">@efferd</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">美しく作られたShadcn/UIブロック。モダンなウェブサイト構築を簡単に</p>
+                <div class="text-xs text-blue-600 font-medium">ウェブサイトブロック</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg p-4 border border-orange-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🚀</span>
+                    <h3 class="text-sm font-bold text-slate-800">@tailark</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">モダンなマーケティングウェブサイト構築用に設計されたShadcnブロック</p>
+                <div class="text-xs text-orange-600 font-medium">マーケティング向け</div>
+            </div>
+
+            <!-- Others -->
+            <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-4 border border-indigo-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎪</span>
+                    <h3 class="text-sm font-bold text-slate-800">@coss</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">Base UI上に構築された新しいモダンUIコンポーネントライブラリ。開発者とAI向け</p>
+                <div class="text-xs text-indigo-600 font-medium">最新アーキテクチャ</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-sky-50 to-cyan-50 rounded-lg p-4 border border-sky-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🎲</span>
+                    <h3 class="text-sm font-bold text-slate-800">@diceui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">アクセシブルなshadcn/uiコンポーネント。React、TypeScript、Tailwind CSSで構築</p>
+                <div class="text-xs text-sky-600 font-medium">アクセシビリティ重視</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-teal-50 to-green-50 rounded-lg p-4 border border-teal-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🌿</span>
+                    <h3 class="text-sm font-bold text-slate-800">@kibo-ui</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">composable、accessible、open source - shadcn/ui向けカスタムレジストリ</p>
+                <div class="text-xs text-teal-600 font-medium">コンポーザブル設計</div>
+            </div>
+
+            <div class="bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg p-4 border border-pink-200 hover:shadow-lg transition-all">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">🔮</span>
+                    <h3 class="text-sm font-bold text-slate-800">@ncdai</h3>
+                </div>
+                <p class="text-xs text-slate-700 mb-2">再利用可能なコンポーネントのコレクション</p>
+                <div class="text-xs text-pink-600 font-medium">汎用コンポーネント</div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-5">
+            <p class="text-xs text-slate-500">35+ registries · CLI ready · Production grade</p>
+        </div>
+    </div>
+</body>
+</html>
