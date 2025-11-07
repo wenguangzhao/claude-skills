@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>文档</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
+    />
+  </head>
+  <body>
+    <article
+      class="box-border min-w-[200px] max-w-[980px] mx-auto p-[45px]"
+      id="content"
+    ></article>
+    <script>
+      const markdown = `
+# 你的Markdown内容
+在这里粘贴你的markdown
+`;
+      document.getElementById("content").innerHTML = marked.parse(markdown);
+    </script>
+  </body>
+</html>
