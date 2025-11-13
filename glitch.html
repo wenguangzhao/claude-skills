@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>動的グリッチエフェクト</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Courier New", monospace;
+        background: #000;
+        color: #0f0;
+        padding: 40px;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 4em;
+        text-transform: uppercase;
+        letter-spacing: 15px;
+        color: #0ff;
+        text-shadow: 0 0 20px #0ff;
+      }
+
+      .intro {
+        background: #0a0a0a;
+        border: 2px solid #0ff;
+        padding: 30px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        line-height: 1.8;
+        border-radius: 8px;
+      }
+
+      .intro h2 {
+        color: #0ff;
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-align: center;
+        text-shadow: 0 0 10px #0ff;
+      }
+
+      .intro h3 {
+        color: #0f0;
+        font-size: 1.5em;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #0f0;
+        padding-bottom: 8px;
+      }
+
+      .intro p {
+        color: #ccc;
+        font-size: 1em;
+        margin-bottom: 15px;
+      }
+
+      .intro ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 20px;
+      }
+
+      .intro li {
+        color: #aaa;
+        margin-bottom: 12px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .intro li::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #0f0;
+      }
+
+      .intro strong {
+        color: #f0f;
+      }
+
+      .intro code {
+        background: #1a1a1a;
+        color: #0ff;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+      }
+
+      .tech-note {
+        background: rgba(255, 0, 255, 0.1);
+        border-left: 4px solid #f0f;
+        padding: 15px;
+        margin-top: 20px;
+        color: #ddd;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 40px;
+      }
+
+      .glitch-card {
+        background: #0a0a0a;
+        border: 2px solid #0f0;
+        padding: 0;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: none;
+      }
+
+      .glitch-card:hover {
+        border-color: #f0f;
+      }
+
+      .glitch-title {
+        background: #0f0;
+        color: #000;
+        padding: 15px;
+        font-size: 1.2em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        text-align: center;
+      }
+
+      .glitch-preview {
+        width: 100%;
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .glitch-text {
+        font-size: 90px;
+        font-weight: bold;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 15px;
+        user-select: none;
+      }
+
+      .hint {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 1.2em;
+        color: #0ff;
+      }
+
+      .info {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 255, 0, 0.2);
+        padding: 8px 12px;
+        font-size: 0.9em;
+        border: 1px solid #0f0;
+      }
+
+      .status {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(255, 0, 255, 0.3);
+        padding: 6px 10px;
+        font-size: 0.8em;
+        border: 1px solid #f0f;
+        display: none;
+      }
+
+      .glitch-card:hover .status {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>/// DYNAMIC GLITCH ///</h1>
+
+      <div class="grid">
+        <!-- 效果1: RGB振荡 -->
+        <div class="glitch-card" data-glitch="1">
+          <div class="glitch-title">RGB OSCILLATION</div>
+          <div class="glitch-preview">
+            <div class="glitch-text" style="filter: url(#glitch1)">ERROR</div>
+            <div class="status">UNSTABLE</div>
+            <div class="info">HOVER TO INTENSIFY</div>
+          </div>
+        </div>
+
+        <!-- 效果2: 扫描线跳跃 -->
+        <div class="glitch-card" data-glitch="2">
+          <div class="glitch-title">SCAN JUMP</div>
+          <div class="glitch-preview">
+            <div class="glitch-text" style="filter: url(#glitch2)">CHAOS</div>
+            <div class="status">UNSTABLE</div>
+            <div class="info">HOVER TO INTENSIFY</div>
+          </div>
+        </div>
+
+        <!-- 效果3: 数字脉冲 -->
+        <div class="glitch-card" data-glitch="3">
+          <div class="glitch-title">DIGITAL PULSE</div>
+          <div class="glitch-preview">
+            <div class="glitch-text" style="filter: url(#glitch3)">CRASH</div>
+            <div class="status">UNSTABLE</div>
+            <div class="info">HOVER TO INTENSIFY</div>
+          </div>
+        </div>
+
+        <!-- 效果4: 波形震荡 -->
+        <div class="glitch-card" data-glitch="4">
+          <div class="glitch-title">WAVE SHAKE</div>
+          <div class="glitch-preview">
+            <div class="glitch-text" style="filter: url(#glitch4)">GLITCH</div>
+            <div class="status">UNSTABLE</div>
+            <div class="info">HOVER TO INTENSIFY</div>
+          </div>
+        </div>
+
+        <!-- 效果5: 信号脉冲 -->
+        <div class="glitch-card" data-glitch="5">
+          <div class="glitch-title">SIGNAL PULSE</div>
+          <div class="glitch-preview">
+            <div class="glitch-text" style="filter: url(#glitch5)">NOISE</div>
+            <div class="status">UNSTABLE</div>
+            <div class="info">HOVER TO INTENSIFY</div>
+          </div>
+        </div>
+
+        <!-- 效果6: 极端波动 -->
+        <div class="glitch-card" data-glitch="6">
+          <div class="glitch-title">EXTREME FLUX</div>
+          <div class="glitch-preview">
+            <div class="glitch-text" style="filter: url(#glitch6)">FATAL</div>
+            <div class="status">UNSTABLE</div>
+            <div class="info">HOVER TO INTENSIFY</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint">▲ ALL EFFECTS ARE CONSTANTLY UNSTABLE ▲</div>
+
+      <div class="intro">
+        <h2>グリッチエフェクトについて</h2>
+        <p>
+          これはSVGフィルターを使用した動的なグリッチエフェクトのデモです。Procreateの「Glitch」調整機能（Artifact、Wave、Signal、Divergeなど）にインスパイアされ、ビデオ信号の故障やデジタル画像の破損を模倣した視覚効果を再現しています。
+        </p>
+
+        <h3>SVGフィルターによる実装</h3>
+        <p>
+          これらのエフェクトは、以下のSVGフィルタープリミティブを組み合わせて実現しています:
+        </p>
+        <ul>
+          <li>
+            <strong>feColorMatrix</strong> -
+            RGB色空間を分離し、各チャンネルを個別に抽出
+          </li>
+          <li>
+            <strong>feOffset</strong> -
+            各色チャンネルを異なる方向にシフトさせ、色収差効果を生成
+          </li>
+          <li>
+            <strong>feTurbulence</strong> -
+            Perlinノイズを生成し、アナログ/デジタル信号ノイズを模倣
+          </li>
+          <li>
+            <strong>feDisplacementMap</strong> -
+            ノイズテクスチャを使用してピクセルを変位させ、波形やスキャンライン歪みを作成
+          </li>
+          <li>
+            <strong>feBlend</strong> -
+            スクリーンモードで色チャンネルを合成し、明るく鮮やかな色分離を実現
+          </li>
+          <li>
+            <strong>feComponentTransfer</strong> -
+            RGBチャンネルの強度を調整し、コントラストを強調
+          </li>
+        </ul>
+
+        <h3>動的アニメーション</h3>
+        <p>
+          JavaScriptの<code>requestAnimationFrame</code>を使用して、すべてのフィルターパラメータをリアルタイムで更新しています。正弦波、のこぎり波、パルス波などの数学関数を組み合わせ、さらにランダムなジッター（抖動）を加えることで、予測不可能で不安定なグリッチ効果を生み出しています。
+        </p>
+        <p>
+          各エフェクトは独立したタイムラインで動作し、0.5〜2秒ごとにランダムなバースト（突発的な強化）が発生します。マウスホバー時には、すべてのパラメータが3〜8倍に増幅され、より激しい混乱状態に移行します。
+        </p>
+
+        <div class="tech-note">
+          <strong>技術的なポイント:</strong>
+          SVGフィルターはGPUアクセラレーションに対応していますが、複雑なフィルターチェーンはパフォーマンスに影響を与える可能性があります。このデモでは6つの独立したフィルターが同時に動作しているため、低スペックデバイスでは動作が重くなる場合があります。
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG 滤镜定义 -->
+    <svg width="0" height="0" style="position: absolute">
+      <defs>
+        <!-- 效果1 -->
+        <filter id="glitch1" x="-100%" y="-100%" width="300%" height="300%">
+          <feColorMatrix
+            type="matrix"
+            result="red"
+            values="3 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+          />
+          <feOffset in="red" dx="0" dy="0" result="red-offset" id="g1-red" />
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            result="green"
+            values="0 0 0 0 0  0 3 0 0 0  0 0 0 0 0  0 0 0 1 0"
+          />
+          <feOffset
+            in="green"
+            dx="0"
+            dy="0"
+            result="green-offset"
+            id="g1-green"
+          />
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            result="blue"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 3 0 0  0 0 0 1 0"
+          />
+          <feOffset in="blue" dx="0" dy="0" result="blue-offset" id="g1-blue" />
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.5"
+            numOctaves="1"
+            result="noise"
+            id="g1-noise"
+          />
+          <feDisplacementMap
+            in="red-offset"
+            in2="noise"
+            scale="0"
+            result="red-final"
+            id="g1-disp"
+          />
+          <feBlend
+            mode="screen"
+            in="red-final"
+            in2="green-offset"
+            result="rg"
+          />
+          <feBlend mode="screen" in="rg" in2="blue-offset" />
+        </filter>
+
+        <!-- 效果2 -->
+        <filter id="glitch2" x="-100%" y="-100%" width="300%" height="300%">
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0 0.3"
+            numOctaves="1"
+            result="scan"
+            id="g2-turb"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="scan"
+            scale="0"
+            xChannelSelector="R"
+            yChannelSelector="R"
+            result="scan-effect"
+            id="g2-disp1"
+          />
+          <feOffset
+            in="scan-effect"
+            dx="0"
+            dy="0"
+            result="r-scan"
+            id="g2-offset1"
+          />
+          <feOffset
+            in="scan-effect"
+            dx="0"
+            dy="0"
+            result="b-scan"
+            id="g2-offset2"
+          />
+          <feBlend mode="screen" in="r-scan" in2="b-scan" result="rb" />
+          <feBlend mode="screen" in="rb" in2="scan-effect" />
+        </filter>
+
+        <!-- 效果3 -->
+        <filter id="glitch3" x="-100%" y="-100%" width="300%" height="300%">
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.15"
+            numOctaves="1"
+            result="blocks"
+            id="g3-turb"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="blocks"
+            scale="0"
+            result="broken"
+            id="g3-disp"
+          />
+          <feColorMatrix
+            in="broken"
+            type="saturate"
+            values="2"
+            result="saturated"
+          />
+          <feOffset
+            in="saturated"
+            dx="0"
+            dy="0"
+            result="offset1"
+            id="g3-offset"
+          />
+          <feBlend mode="screen" in="offset1" in2="saturated" />
+        </filter>
+
+        <!-- 效果4 -->
+        <filter id="glitch4" x="-100%" y="-100%" width="300%" height="300%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.02 0.08"
+            numOctaves="3"
+            result="wave"
+            id="g4-turb"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="wave"
+            scale="0"
+            result="wavy"
+            id="g4-disp"
+          />
+          <feColorMatrix
+            in="wavy"
+            type="matrix"
+            result="r"
+            values="2 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+          />
+          <feOffset in="r" dx="0" dy="0" result="r-offset" id="g4-offset1" />
+          <feColorMatrix
+            in="wavy"
+            type="matrix"
+            result="b"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 2 0 0  0 0 0 1 0"
+          />
+          <feOffset in="b" dx="0" dy="0" result="b-offset" id="g4-offset2" />
+          <feBlend mode="screen" in="r-offset" in2="wavy" result="rb" />
+          <feBlend mode="screen" in="rb" in2="b-offset" />
+        </filter>
+
+        <!-- 效果5 -->
+        <filter id="glitch5" x="-100%" y="-100%" width="300%" height="300%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="1.5"
+            numOctaves="4"
+            result="noise"
+            id="g5-turb"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="0"
+            result="noisy"
+            id="g5-disp1"
+          />
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.01 0.5"
+            numOctaves="2"
+            result="h-noise"
+            id="g5-turb2"
+          />
+          <feDisplacementMap
+            in="noisy"
+            in2="h-noise"
+            scale="0"
+            xChannelSelector="R"
+            yChannelSelector="R"
+            result="jammed"
+            id="g5-disp2"
+          />
+          <feComponentTransfer in="jammed">
+            <feFuncR type="linear" slope="1.5" intercept="0" id="g5-r" />
+            <feFuncG type="linear" slope="1.5" intercept="0" id="g5-g" />
+            <feFuncB type="linear" slope="1.5" intercept="0" id="g5-b" />
+          </feComponentTransfer>
+        </filter>
+
+        <!-- 效果6 -->
+        <filter id="glitch6" x="-150%" y="-150%" width="400%" height="400%">
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.2"
+            numOctaves="2"
+            result="noise1"
+            id="g6-turb1"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise1"
+            scale="0"
+            result="layer1"
+            id="g6-disp1"
+          />
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.05 0.5"
+            numOctaves="3"
+            result="noise2"
+            id="g6-turb2"
+          />
+          <feDisplacementMap
+            in="layer1"
+            in2="noise2"
+            scale="0"
+            result="layer2"
+            id="g6-disp2"
+          />
+          <feColorMatrix
+            in="layer2"
+            type="matrix"
+            result="r"
+            values="5 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+          />
+          <feOffset in="r" dx="0" dy="0" result="r-off" id="g6-offset1" />
+          <feColorMatrix
+            in="layer2"
+            type="matrix"
+            result="g"
+            values="0 0 0 0 0  0 5 0 0 0  0 0 0 0 0  0 0 0 1 0"
+          />
+          <feOffset in="g" dx="0" dy="0" result="g-off" id="g6-offset2" />
+          <feColorMatrix
+            in="layer2"
+            type="matrix"
+            result="b"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 5 0 0  0 0 0 1 0"
+          />
+          <feOffset in="b" dx="0" dy="0" result="b-off" id="g6-offset3" />
+          <feBlend mode="screen" in="r-off" in2="g-off" result="rg" />
+          <feBlend mode="screen" in="rg" in2="b-off" />
+        </filter>
+      </defs>
+    </svg>
+
+    <script>
+      // 随机数生成器
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      // 随机整数
+      function randomInt(min, max) {
+        return Math.floor(random(min, max));
+      }
+
+      // 抖动函数 - 在基础值上添加随机跳跃
+      function jitter(base, amount) {
+        // 随机决定是否跳跃
+        if (Math.random() > 0.7) {
+          return base + random(-amount, amount);
+        }
+        return base;
+      }
+
+      // 锯齿波
+      function sawtooth(t, period) {
+        return 2 * ((t / period) % 1) - 1;
+      }
+
+      // 脉冲波
+      function pulse(t, period) {
+        return (t / period) % 1 > 0.5 ? 1 : -1;
+      }
+
+      // Glitch状态管理
+      class GlitchEffect {
+        constructor(id) {
+          this.id = id;
+          this.time = Math.random() * 1000;
+          this.isHovered = false;
+          this.intensity = 1;
+          this.lastGlitchTime = 0;
+        }
+
+        update(deltaTime) {
+          this.time += deltaTime;
+
+          // 随机突发性增强
+          if (this.time - this.lastGlitchTime > random(500, 2000)) {
+            this.lastGlitchTime = this.time;
+            this.applyBurst();
+          }
+        }
+
+        applyBurst() {
+          // 随机突发glitch
+          // 这个方法会被子类重写
+        }
+      }
+
+      // 效果1: RGB振荡
+      class Glitch1 extends GlitchEffect {
+        update(deltaTime) {
+          super.update(deltaTime);
+          const t = this.time * 0.001;
+          const mult = this.isHovered ? 3 : 1;
+
+          // RGB偏移带抖动
+          const redX = jitter(Math.sin(t * 3) * 5 * mult, 8 * mult);
+          const redY = jitter(Math.cos(t * 4) * 4 * mult, 6 * mult);
+          const greenX = jitter(Math.sin(t * 2.5) * -4 * mult, 7 * mult);
+          const greenY = jitter(Math.cos(t * 3.5) * 3 * mult, 5 * mult);
+          const blueY = jitter(Math.sin(t * 2) * 5 * mult, 9 * mult);
+
+          document.getElementById("g1-red").setAttribute("dx", redX);
+          document.getElementById("g1-red").setAttribute("dy", redY);
+          document.getElementById("g1-green").setAttribute("dx", greenX);
+          document.getElementById("g1-green").setAttribute("dy", greenY);
+          document.getElementById("g1-blue").setAttribute("dy", blueY);
+
+          // 噪声频率抖动
+          const noiseFreq = jitter(
+            0.5 + Math.abs(Math.sin(t)) * 2 * mult,
+            1 * mult
+          );
+          document
+            .getElementById("g1-noise")
+            .setAttribute("baseFrequency", Math.max(0.1, noiseFreq));
+
+          // 位移强度
+          const scale = jitter(
+            5 * Math.abs(Math.cos(t * 1.5)) * mult,
+            15 * mult
+          );
+          document
+            .getElementById("g1-disp")
+            .setAttribute("scale", Math.max(0, scale));
+        }
+
+        applyBurst() {
+          const mult = this.isHovered ? 5 : 2;
+          document
+            .getElementById("g1-red")
+            .setAttribute("dx", random(-20, 20) * mult);
+          document
+            .getElementById("g1-red")
+            .setAttribute("dy", random(-20, 20) * mult);
+          document
+            .getElementById("g1-disp")
+            .setAttribute("scale", random(20, 40) * mult);
+        }
+      }
+
+      // 效果2: 扫描线跳跃
+      class Glitch2 extends GlitchEffect {
+        update(deltaTime) {
+          super.update(deltaTime);
+          const t = this.time * 0.001;
+          const mult = this.isHovered ? 4 : 1;
+
+          // 扫描线频率随机跳跃
+          const scanFreq =
+            Math.random() > 0.8
+              ? random(0.1, 3) * mult
+              : 0.3 + Math.abs(pulse(t, 2)) * 0.5 * mult;
+          document
+            .getElementById("g2-turb")
+            .setAttribute("baseFrequency", `0 ${scanFreq}`);
+
+          // 位移抖动
+          const scale = jitter(
+            sawtooth(t, 3) * 20 * mult + 25 * mult,
+            30 * mult
+          );
+          document
+            .getElementById("g2-disp1")
+            .setAttribute("scale", Math.max(0, scale));
+
+          // RGB偏移跳跃
+          const offset1 =
+            Math.random() > 0.7
+              ? random(-10, 10) * mult
+              : Math.sin(t * 2) * 3 * mult;
+          const offset2 =
+            Math.random() > 0.7
+              ? random(-10, 10) * mult
+              : -Math.sin(t * 2) * 3 * mult;
+          document.getElementById("g2-offset1").setAttribute("dx", offset1);
+          document.getElementById("g2-offset2").setAttribute("dx", offset2);
+        }
+
+        applyBurst() {
+          const mult = this.isHovered ? 6 : 2;
+          document
+            .getElementById("g2-turb")
+            .setAttribute("baseFrequency", `0 ${random(1, 5) * mult}`);
+          document
+            .getElementById("g2-disp1")
+            .setAttribute("scale", random(50, 100) * mult);
+        }
+      }
+
+      // 效果3: 数字脉冲
+      class Glitch3 extends GlitchEffect {
+        update(deltaTime) {
+          super.update(deltaTime);
+          const t = this.time * 0.001;
+          const mult = this.isHovered ? 3.5 : 1;
+
+          // 块状频率脉冲
+          const blockFreq = 0.15 + Math.abs(pulse(t, 1.5)) * 0.3 * mult;
+          document
+            .getElementById("g3-turb")
+            .setAttribute("baseFrequency", jitter(blockFreq, 0.2 * mult));
+
+          // 位移带突变
+          let scale = Math.abs(Math.sin(t * 2)) * 30 * mult;
+          if (Math.random() > 0.85) scale += random(20, 50) * mult;
+          document
+            .getElementById("g3-disp")
+            .setAttribute("scale", jitter(scale, 20 * mult));
+
+          // 偏移跳动
+          const offsetX = jitter(sawtooth(t, 2) * 5 * mult, 8 * mult);
+          const offsetY = jitter(-sawtooth(t, 2) * 5 * mult, 8 * mult);
+          document.getElementById("g3-offset").setAttribute("dx", offsetX);
+          document.getElementById("g3-offset").setAttribute("dy", offsetY);
+        }
+
+        applyBurst() {
+          const mult = this.isHovered ? 5 : 2;
+          document
+            .getElementById("g3-disp")
+            .setAttribute("scale", random(60, 120) * mult);
+          document
+            .getElementById("g3-offset")
+            .setAttribute("dx", random(-20, 20) * mult);
+        }
+      }
+
+      // 效果4: 波形震荡
+      class Glitch4 extends GlitchEffect {
+        update(deltaTime) {
+          super.update(deltaTime);
+          const t = this.time * 0.001;
+          const mult = this.isHovered ? 4 : 1;
+
+          // 波形频率震荡
+          const freqX = jitter(
+            0.02 + Math.abs(Math.sin(t)) * 0.06 * mult,
+            0.05 * mult
+          );
+          const freqY = jitter(
+            0.08 + Math.abs(Math.cos(t * 1.3)) * 0.3 * mult,
+            0.2 * mult
+          );
+          document
+            .getElementById("g4-turb")
+            .setAttribute("baseFrequency", `${freqX} ${freqY}`);
+
+          // 位移震荡
+          const scale = jitter(
+            20 + Math.abs(Math.sin(t * 1.5)) * 40 * mult,
+            30 * mult
+          );
+          document.getElementById("g4-disp").setAttribute("scale", scale);
+
+          // RGB偏移震荡
+          const offset1 = jitter(Math.sin(t * 3) * 6 * mult, 10 * mult);
+          const offset2 = jitter(-Math.sin(t * 3) * 6 * mult, 10 * mult);
+          document.getElementById("g4-offset1").setAttribute("dx", offset1);
+          document.getElementById("g4-offset2").setAttribute("dx", offset2);
+        }
+
+        applyBurst() {
+          const mult = this.isHovered ? 6 : 2;
+          document
+            .getElementById("g4-disp")
+            .setAttribute("scale", random(80, 150) * mult);
+          document
+            .getElementById("g4-offset1")
+            .setAttribute("dx", random(-25, 25) * mult);
+        }
+      }
+
+      // 效果5: 信号脉冲
+      class Glitch5 extends GlitchEffect {
+        update(deltaTime) {
+          super.update(deltaTime);
+          const t = this.time * 0.001;
+          const mult = this.isHovered ? 4.5 : 1;
+
+          // 噪声频率随机跳跃
+          const freq =
+            Math.random() > 0.8
+              ? random(3, 8) * mult
+              : 1.5 + Math.abs(pulse(t, 1)) * 2 * mult;
+          document
+            .getElementById("g5-turb")
+            .setAttribute("baseFrequency", freq);
+
+          // 第一层位移
+          const scale1 = jitter(
+            10 + Math.abs(Math.sin(t * 2)) * 20 * mult,
+            25 * mult
+          );
+          document.getElementById("g5-disp1").setAttribute("scale", scale1);
+
+          // 水平干扰频率
+          const hFreqY = jitter(
+            0.5 + Math.abs(Math.cos(t * 1.5)) * 2 * mult,
+            1.5 * mult
+          );
+          document
+            .getElementById("g5-turb2")
+            .setAttribute("baseFrequency", `0.01 ${hFreqY}`);
+
+          // 第二层位移突变
+          let scale2 = 20 + Math.abs(sawtooth(t, 2)) * 50 * mult;
+          if (Math.random() > 0.9) scale2 += random(50, 100) * mult;
+          document.getElementById("g5-disp2").setAttribute("scale", scale2);
+
+          // 颜色增强波动
+          const slope = jitter(
+            1.5 + Math.abs(Math.sin(t)) * 1.5 * mult,
+            1 * mult
+          );
+          document.getElementById("g5-r").setAttribute("slope", slope);
+          document.getElementById("g5-g").setAttribute("slope", slope);
+          document.getElementById("g5-b").setAttribute("slope", slope);
+        }
+
+        applyBurst() {
+          const mult = this.isHovered ? 7 : 2;
+          document
+            .getElementById("g5-turb")
+            .setAttribute("baseFrequency", random(5, 10) * mult);
+          document
+            .getElementById("g5-disp2")
+            .setAttribute("scale", random(100, 200) * mult);
+        }
+      }
+
+      // 效果6: 极端波动
+      class Glitch6 extends GlitchEffect {
+        update(deltaTime) {
+          super.update(deltaTime);
+          const t = this.time * 0.001;
+          const mult = this.isHovered ? 5 : 1;
+
+          // 第一层噪声随机突变
+          const freq1 =
+            Math.random() > 0.85
+              ? random(0.5, 2) * mult
+              : 0.2 + Math.abs(pulse(t, 1.2)) * 0.5 * mult;
+          document
+            .getElementById("g6-turb1")
+            .setAttribute("baseFrequency", freq1);
+
+          // 第一层位移
+          const scale1 = jitter(
+            20 + Math.abs(Math.sin(t * 1.5)) * 40 * mult,
+            40 * mult
+          );
+          document.getElementById("g6-disp1").setAttribute("scale", scale1);
+
+          // 第二层噪声
+          const freq2X = jitter(
+            0.05 + Math.abs(Math.cos(t)) * 0.2 * mult,
+            0.15 * mult
+          );
+          const freq2Y = jitter(
+            0.5 + Math.abs(Math.sin(t * 1.3)) * 1.5 * mult,
+            1 * mult
+          );
+          document
+            .getElementById("g6-turb2")
+            .setAttribute("baseFrequency", `${freq2X} ${freq2Y}`);
+
+          // 第二层位移带大幅跳跃
+          let scale2 = 30 + Math.abs(sawtooth(t, 2.5)) * 60 * mult;
+          if (Math.random() > 0.88) scale2 += random(60, 120) * mult;
+          document.getElementById("g6-disp2").setAttribute("scale", scale2);
+
+          // RGB极端分离
+          const offsetR = jitter(Math.sin(t * 2) * 10 * mult, 20 * mult);
+          const offsetG = jitter(Math.cos(t * 2.5) * -10 * mult, 20 * mult);
+          const offsetB = jitter(Math.sin(t * 1.8) * 8 * mult, 18 * mult);
+
+          document.getElementById("g6-offset1").setAttribute("dx", offsetR);
+          document
+            .getElementById("g6-offset1")
+            .setAttribute("dy", -Math.abs(offsetR));
+          document.getElementById("g6-offset2").setAttribute("dx", offsetG);
+          document
+            .getElementById("g6-offset2")
+            .setAttribute("dy", Math.abs(offsetG));
+          document.getElementById("g6-offset3").setAttribute("dy", offsetB);
+        }
+
+        applyBurst() {
+          const mult = this.isHovered ? 8 : 3;
+          document
+            .getElementById("g6-disp1")
+            .setAttribute("scale", random(80, 150) * mult);
+          document
+            .getElementById("g6-disp2")
+            .setAttribute("scale", random(120, 250) * mult);
+          document
+            .getElementById("g6-offset1")
+            .setAttribute("dx", random(-30, 30) * mult);
+        }
+      }
+
+      // 初始化所有效果
+      const effects = [
+        new Glitch1(1),
+        new Glitch2(2),
+        new Glitch3(3),
+        new Glitch4(4),
+        new Glitch5(5),
+        new Glitch6(6),
+      ];
+
+      // 绑定hover事件
+      document.querySelectorAll(".glitch-card").forEach((card, index) => {
+        card.addEventListener("mouseenter", () => {
+          effects[index].isHovered = true;
+        });
+        card.addEventListener("mouseleave", () => {
+          effects[index].isHovered = false;
+        });
+      });
+
+      // 主动画循环
+      let lastTime = performance.now();
+      function animate() {
+        const currentTime = performance.now();
+        const deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+
+        // 更新所有效果
+        effects.forEach((effect) => effect.update(deltaTime));
+
+        requestAnimationFrame(animate);
+      }
+
+      // 启动动画
+      animate();
+
+      // 随机边框闪烁
+      setInterval(() => {
+        const cards = document.querySelectorAll(".glitch-card");
+        const randomCard = cards[Math.floor(Math.random() * cards.length)];
+        randomCard.style.borderColor = "#f0f";
+        setTimeout(() => {
+          randomCard.style.borderColor = "#0f0";
+        }, randomInt(50, 200));
+      }, randomInt(1000, 3000));
+    </script>
+  </body>
+</html>
