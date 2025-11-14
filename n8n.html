@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIを使ったn8nワークフロー自動生成ガイド</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <div class="max-w-4xl mx-auto px-6 py-12">
+        <header class="mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">AIを使ったn8nワークフロー自動生成ガイド</h1>
+            <p class="text-lg text-gray-600">Claude CodeとAIを活用して、15分でn8nワークフローを作成する方法</p>
+        </header>
+
+        <main class="space-y-12">
+            <!-- Step 1 -->
+            <section class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-blue-600 mb-6">Step 1: 必要なJSONを見つける</h2>
+                <p class="text-gray-700 mb-4">AIにオンラインで既存のワークフローJSONを検索させます。特に公式テンプレートライブラリには6000以上のテンプレートがあるので、あなたのニーズに近いものが必ず見つかります。</p>
+                
+                <div class="bg-gray-100 rounded-lg p-6 mb-4">
+                    <h3 class="font-semibold text-gray-800 mb-3">プロンプト例:</h3>
+                    <pre class="bg-gray-800 text-green-400 p-4 rounded overflow-x-auto text-sm"><code>Redditモニタリング用のn8nワークフローを構築する予定です。
+ブランド競合分析、ネガティブな世論、ユーザーの課題洞察などのニーズに対応します:
+
+あなたの方案
+
+公式テンプレートライブラリ(https://n8n.io/workflows/)、X(Twitter)、YouTubeなどから、
+最も適切で既存のn8nワークフローテンプレートを10個見つけて参考にしてください。
+すべてにソースリンクを付けてください。</code></pre>
+                </div>
+            </section>
+
+            <!-- Step 2 -->
+            <section class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-blue-600 mb-6">Step 2: JSONを一括ダウンロード</h2>
+                <p class="text-gray-700 mb-4">第二ステップでは、Claude Codeに作業を任せます。</p>
+                <p class="text-gray-700 mb-4">以前のケースを参考に、Playwrightを使ってこの単純作業を完了させます:</p>
+                
+                <div class="bg-gray-100 rounded-lg p-6 mb-4">
+                    <h3 class="font-semibold text-gray-800 mb-3">プロンプト例:</h3>
+                    <pre class="bg-gray-800 text-green-400 p-4 rounded overflow-x-auto text-sm"><code>playwright mcpツールを呼び出して、以下の8つのN8Nテンプレートリンクに順次アクセスしてください。
+各リンクのページで「use for free」ボタンを見つけてクリックし、
+ポップアップで「Copy template to clipboard [JSON]」をクリックします。
+次に、ローカルフォルダーにJSONファイルを作成し、コピーした内容を貼り付けます。
+つまり、合計8つのJSONファイルを生成します。</code></pre>
+                    <p class="text-gray-600 mt-3 text-sm">ここに、前のChatGPTの検索結果を配置します</p>
+                </div>
+                
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                    <p class="text-blue-800">この時、Claude Codeが自動的にブラウザを呼び出してタスクを完了します。</p>
+                </div>
+                
+                <p class="text-gray-700">これで、あなたのニーズに類似した複数のn8nワークフローJSONファイルが手に入ります。</p>
+            </section>
+
+            <!-- Step 3 -->
+            <section class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold text-blue-600 mb-6">Step 3: ワークフローを生成</h2>
+                <p class="text-gray-700 mb-4">最後に、Claude Code内で以下のプロンプトを参考にして、AIにワークフローファイルを生成させます:</p>
+                
+                <div class="bg-gray-100 rounded-lg p-6 mb-6">
+                    <h3 class="font-semibold text-gray-800 mb-3">プロンプト例:</h3>
+                    <pre class="bg-gray-800 text-green-400 p-4 rounded overflow-x-auto text-sm"><code>現在のフォルダーはReddit関連のn8nワークフローJSONファイルです。
+すべてのファイルを完全に閲覧してから、以下のニーズを満たしてください:
+
+大疆(DJI)Reddit世論モニタリングフロー
+
+目標: Reddit上の大疆およびその競合製品に関する議論を自動的に監視し、
+問題と機会をタイムリーに発見する。
+
+第一段階: モニタリング指示の設定 (Inputs)
+
+以下の2つのリストを提供する必要があります:
+
+キーワードリスト (Keywords):
+- ブランドワード: DJI, 大疆
+- 製品ワード: Mavic, Air, Mini, Inspire, Phantom, Avata, Osmo, Ronin
+- 課題ワード: flyaway(墜落), GPS lost, battery drain, firmware update, 
+  no signal, customer service, gimbal issue, app crash, no-fly zone
+- 競合ワード: Autel, Parrot, Skydio, Yuneec, Hubsan, PowerVision
+
+コミュニティリスト (Subreddits):
+- r/dji
+- r/drones
+- r/Multicopter
+- r/UAV
+- r/Quadcopter
+- r/DronePhotography
+
+第二段階: N8N自動化フロー (Workflow)
+
+1. スケジュール起動:
+   システムは週に一度自動的に実行されます。
+
+2. コンテンツ取得:
+   上記のコミュニティから、上記のキーワードを含む最新の投稿とコメントを
+   自動的に取得します。
+
+3. AI分析:
+   AIが各コンテンツを読み取り、タグを付けます:
+   - センチメント: ポジティブ / ネガティブ / 中立
+   - テーマ: 飛行性能 / ハードウェア問題 / ソフトウェア/App / 
+     カスタマーサービス / アフターサービス / 規制コンプライアンス
+   - 緊急度: はい / いいえ
+
+4. 自動処理:
+   - 緊急事態(深刻なネガティブなど): 直ちにGmailでアラートを送信
+   - すべてのケース: 分析結果を自動的にGoogleスプレッドシートに保存
+
+第三段階: 最終成果 (Output)
+
+リアルタイムで更新されるオンラインレポートが得られます:
+- データダッシュボード: 過去7日間の総メンション数、ネガティブ率
+- 競合比較グラフ: 大疆 vs Autel vs Parrotなどの日次討論量
+- 課題ランキング: ユーザーが最も不満を持っている問題(墜落、ファームウェア問題など)
+- 最新ネガティブリスト: 元のリンク付きで、迅速な対応が可能
+
+最終的に新しいn8nワークフローJSONファイルを作成してください。
+その中で、AI関連タスクはAI Agentノードと組み合わせたOpenAIのmodelで完了します。</code></pre>
+                </div>
+                
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+                    <p class="text-green-800 font-semibold mb-2">しばらく待つと、フォルダーに新しいJSONファイルが追加され、いくつかのノード設定を行う必要があることが通知されます。</p>
+                </div>
+                
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">JSONファイルをn8nにインポート</h3>
+                
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-4">
+                    <p class="text-yellow-800 font-bold text-lg mb-2">すごい!これは本当にマジックではありませんか??</p>
+                    <p class="text-yellow-700">生成されたワークフローは、想像していたものと非常に近いものになりました。第一ステップから今まで、わずか15分しか経っていません。</p>
+                </div>
+                
+                <p class="text-gray-700 mb-3">もし手動で操作していたら、下の第二ステップのような多くのRedditノードだけでもかなりの時間がかかっていたでしょう。</p>
+                <p class="text-gray-700">しかも、各ステップのコメントまで書いてくれています。本当に素晴らしいです。</p>
+            </section>
+
+            <!-- Summary -->
+            <section class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-8 text-white">
+                <h2 class="text-2xl font-bold mb-6">最終考察</h2>
+                <div class="space-y-4 text-lg leading-relaxed">
+                    <p class="font-semibold">多くのワークフローのシーンは、Claude CodeのようなAgentic Codeで完成できるなら、n8nは必要ないのではないか?</p>
+                    
+                    <p>最近、n8nはNVIDIAを含む有名機関から1.8億ドルの資金調達を行い、評価額は25億ドルに急上昇した。</p>
+                    
+                    <p>答えは明白だ。AIはタスクを実行するために安定した信頼性の高い基盤フレームワークが必要であり、n8nはまさにそのフレームワークの最良の選択肢の一つである。</p>
+                    
+                    <p>AIの発展のおかげで、今ではn8nの大部分の煩雑な作業を自動化できるが、最後の一マイルは常に人間が探求し磨き上げる必要がある。</p>
+                    
+                    <p>したがって、私たちがもはや学ぶ必要がないのは、過去のようなノードをひとつひとつドラッグ&ドロップし、設定し、接続するという「肉体労働」だ。</p>
+                    
+                    <p class="font-semibold">私たちが学び始めなければならないのは、全く新しい、より高次元のビジネスアーキテクチャ能力である。</p>
+                    
+                    <div class="mt-6 pt-6 border-t border-white/30">
+                        <p class="font-bold">そうそう、この方法は私が自分で探求してきた中で最も効率的なものだ!</p>
+                        <p class="mt-2">もしこれよりも優れた方法を見つけたら、コメント欄でぜひ挑戦してください!!一緒にAIを使って、複雑で煩雑な手動構築プロセスを排除しましょう!</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-12 pt-8 border-t border-gray-300 text-center text-gray-600">
+            <p>AIとオートメーションの力で、ワークフロー構築を効率化</p>
+        </footer>
+    </div>
+</body>
+</html>
