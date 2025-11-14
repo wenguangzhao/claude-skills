@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hexagon Background</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bg-container"></div>
+
+    <script>
+      const hexSize = 40;
+      const hexWidth = Math.round((hexSize * Math.sqrt(3)) / 2) * 2;
+      const hexHeight = hexSize * 2;
+      const verticalSpacing = hexHeight * 0.75;
+      const backgroundColor = "fill-slate-900";
+
+      const rowColors = [
+        { bg: backgroundColor, hover: "fill-blue-500" },
+        { bg: backgroundColor, hover: "fill-purple-500" },
+        { bg: backgroundColor, hover: "fill-pink-500" },
+        { bg: backgroundColor, hover: "fill-rose-500" },
+        { bg: backgroundColor, hover: "fill-orange-500" },
+        { bg: backgroundColor, hover: "fill-amber-500" },
+        { bg: backgroundColor, hover: "fill-yellow-500" },
+        { bg: backgroundColor, hover: "fill-lime-500" },
+        { bg: backgroundColor, hover: "fill-green-500" },
+        { bg: backgroundColor, hover: "fill-emerald-500" },
+        { bg: backgroundColor, hover: "fill-teal-500" },
+        { bg: backgroundColor, hover: "fill-cyan-500" },
+        { bg: backgroundColor, hover: "fill-sky-500" },
+        { bg: backgroundColor, hover: "fill-indigo-500" },
+        { bg: backgroundColor, hover: "fill-violet-500" },
+      ];
+
+      function getMarginBySize(size) {
+        const height = size * 2;
+        const overlapRatio = 0.25;
+        return -(height * overlapRatio);
+      }
+
+      function createHexagon(size, fillClass, hoverFillClass) {
+        const width = Math.round((size * Math.sqrt(3)) / 2) * 2;
+        const height = size * 2;
+        const points = `${width / 2},0 ${width},${height * 0.25} ${width},${
+          height * 0.75
+        } ${width / 2},${height} 0,${height * 0.75} 0,${height * 0.25}`;
+
+        const svg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg"
+        );
+        svg.setAttribute("width", width);
+        svg.setAttribute("height", height);
+        svg.classList.add("pointer-events-auto");
+        svg.style.pointerEvents = "none";
+
+        const polygon = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "polygon"
+        );
+        polygon.setAttribute("points", points);
+        polygon.setAttribute("stroke-width", "1");
+        polygon.classList.add(
+          fillClass,
+          "stroke-slate-700/30",
+          "transition-colors",
+          "duration-1500",
+          "ease-out"
+        );
+        polygon.style.pointerEvents = "fill";
+
+        let isHovered = false;
+
+        polygon.addEventListener("mouseenter", () => {
+          isHovered = true;
+          polygon.classList.remove(fillClass);
+          polygon.classList.add(hoverFillClass);
+          polygon.classList.remove(
+            "transition-colors",
+            "duration-1500",
+            "ease-out"
+          );
+        });
+
+        polygon.addEventListener("mouseleave", () => {
+          isHovered = false;
+          polygon.classList.remove(hoverFillClass);
+          polygon.classList.add(
+            fillClass,
+            "transition-colors",
+            "duration-1500",
+            "ease-out"
+          );
+        });
+
+        svg.appendChild(polygon);
+        return svg;
+      }
+
+      function createHexagonRow(cols, isEven, rowColor, hoverColor) {
+        const margin = getMarginBySize(hexSize);
+        const row = document.createElement("div");
+        row.classList.add("flex");
+
+        row.style.transform = `translateX(${isEven ? -hexWidth / 2 : 0}px)`;
+        row.style.marginTop = `${margin}px`;
+
+        const count = isEven ? cols + 1 : cols;
+        for (let i = 0; i < count; i++) {
+          const hexContainer = document.createElement("div");
+          const hex = createHexagon(hexSize, rowColor, hoverColor);
+          hexContainer.appendChild(hex);
+          row.appendChild(hexContainer);
+        }
+
+        return row;
+      }
+
+      function render() {
+        const container = document.getElementById("bg-container");
+        container.innerHTML = "";
+        container.className = `fixed inset-0 overflow-hidden pointer-events-none ${backgroundColor} bg-slate-900`;
+
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const cols = Math.ceil(viewportWidth / hexWidth) + 2;
+        const rows = Math.ceil(viewportHeight / verticalSpacing) + 1;
+
+        for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+          const colorScheme = rowColors[rowIndex % rowColors.length];
+          const row = createHexagonRow(
+            cols,
+            rowIndex % 2 === 1,
+            colorScheme.bg,
+            colorScheme.hover
+          );
+          container.appendChild(row);
+        }
+      }
+
+      render();
+      window.addEventListener("resize", render);
+    </script>
+  </body>
+</html>
