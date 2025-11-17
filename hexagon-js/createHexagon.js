@@ -117,23 +117,27 @@
       staticFillClass,
       "transition-colors",
       "duration-[1500ms]",
-      "ease-out"
+      "ease-linear"
     );
     // Allow hover over the polygon without blocking the page
     polygon.style.pointerEvents = "fill";
 
     polygon.addEventListener("mouseenter", () => {
+      // Instant hover: remove transitions so颜色立刻变亮
       polygon.classList.remove(
         staticFillClass,
+        "transition-colors",
         "duration-[1500ms]",
+        "duration-150",
         "ease-in",
         "ease-linear",
         "ease-out"
       );
-      polygon.classList.add(hoverFillClass, "duration-150", "ease-out");
+      polygon.classList.add(hoverFillClass);
     });
 
     polygon.addEventListener("mouseleave", () => {
+      // Smooth fade out: 线性 + 1500ms + transition-colors
       polygon.classList.remove(
         hoverFillClass,
         "duration-150",
@@ -141,7 +145,12 @@
         "ease-in",
         "ease-linear"
       );
-      polygon.classList.add(staticFillClass, "duration-[1500ms]", "ease-linear");
+      polygon.classList.add(
+        staticFillClass,
+        "transition-colors",
+        "duration-[1500ms]",
+        "ease-linear"
+      );
     });
 
     svg.appendChild(polygon);
