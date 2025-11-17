@@ -1,0 +1,199 @@
+(() => {
+  // Tailwind-driven hexagon background (light theme), container always under <body>
+  const CONFIG = {
+    hexSize: 40,
+    containerBgClass: 'bg-white',
+    staticFillClass: 'fill-slate-100',
+    strokeClass: 'stroke-slate-400/30',
+    paletteFillClasses: [
+      'fill-blue-500',
+      'fill-purple-500',
+      'fill-pink-500',
+      'fill-rose-500',
+      'fill-orange-500',
+      'fill-amber-500',
+      'fill-yellow-500',
+      'fill-lime-500',
+      'fill-green-500',
+      'fill-emerald-500',
+      'fill-teal-500',
+      'fill-cyan-500',
+      'fill-sky-500',
+      'fill-indigo-500',
+      'fill-violet-500'
+    ]
+  };
+
+  const HEX_W = Math.round((CONFIG.hexSize * Math.sqrt(3)) / 2) * 2;
+  const HEX_H = CONFIG.hexSize * 2;
+  const VERTICAL_SPACING = HEX_H * 0.75;
+
+  // Ensure Tailwind CDN is loaded (runtime), with safelist for dynamic utilities
+  let _twPromise;
+  function ensureTailwind() {
+    if (_twPromise) return _twPromise;
+    const CDN_SRC = 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4';
+    _twPromise = new Promise((resolve, reject) => {
+      if (window.tailwind) return resolve();
+
+      const hasCfg = document.querySelector('script[data-hexagon-tailwind-config]');
+      if (!hasCfg) {
+        const cfgScript = document.createElement('script');
+        cfgScript.dataset.hexagonTailwindConfig = 'true';
+        const safelist = [
+          'transition-colors', 'ease-linear', 'ease-out', 'duration-150', 'duration-[1500ms]',
+          'fixed', 'inset-0', 'overflow-hidden', 'pointer-events-none', 'flex', 'z-0',
+          CONFIG.containerBgClass, CONFIG.staticFillClass, CONFIG.strokeClass,
+          ...CONFIG.paletteFillClasses,
+        ];
+        cfgScript.text = `window.tailwind=window.tailwind||{};window.tailwind.config=Object.assign({},window.tailwind.config||{}, {safelist:Array.from(new Set((window.tailwind.config&&window.tailwind.config.safelist)?window.tailwind.config.safelist.concat(${JSON.stringify(safelist)}):${JSON.stringify(safelist)}))})`; 
+        document.head.appendChild(cfgScript);
+      }
+
+      const existing = document.querySelector('script[data-tailwind-cdn]');
+      if (existing) {
+        existing.addEventListener('load', () => resolve(), { once: true });
+        existing.addEventListener('error', (e) => reject(e), { once: true });
+        return;
+      }
+      const s = document.createElement('script');
+      s.src = CDN_SRC;
+      s.async = true;
+      s.dataset.tailwindCdn = 'true';
+      s.onload = () => resolve();
+      s.onerror = (e) => reject(e);
+      document.head.appendChild(s);
+    });
+    return _twPromise;
+  }
+
+  function getMarginBySize(size) {
+    const height = size * 2;
+    const overlapRatio = 0.25;
+    return -(height * overlapRatio);
+  }
+
+  function createHexagon(size, staticFillClass, hoverFillClass) {
+    const width = Math.round((size * Math.sqrt(3)) / 2) * 2;
+    const height = size * 2;
+    const points = `${width / 2},0 ${width},${height * 0.25} ${width},${height * 0.75} ${width / 2},${height} 0,${height * 0.75} 0,${height * 0.25}`;
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.classList.add('pointer-events-none');
+
+    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    polygon.setAttribute('points', points);
+    polygon.setAttribute('stroke-width', '1');
+    polygon.classList.add(
+      CONFIG.strokeClass,
+      staticFillClass,
+      'transition-colors',
+      'duration-[1500ms]',
+      'ease-linear'
+    );
+    // allow hover on fill only
+    polygon.style.pointerEvents = 'fill';
+
+    // Hover: instant brighten — remove transitions then apply hover fill
+    polygon.addEventListener('mouseenter', () => {
+      polygon.classList.remove(
+        staticFillClass,
+        'transition-colors',
+        'duration-[1500ms]',
+        'duration-150',
+        'ease-linear',
+        'ease-out'
+      );
+      polygon.classList.add(hoverFillClass);
+    });
+
+    // Leave: linear fade-out back to static
+    polygon.addEventListener('mouseleave', () => {
+      polygon.classList.remove(
+        hoverFillClass,
+        'duration-150',
+        'ease-out',
+        'ease-linear'
+      );
+      polygon.classList.add(
+        staticFillClass,
+        'transition-colors',
+        'duration-[1500ms]',
+        'ease-linear'
+      );
+    });
+
+    svg.appendChild(polygon);
+    return svg;
+  }
+
+  function createHexagonRow(cols, isEven, staticFillClass, hoverFillClass) {
+    const margin = getMarginBySize(CONFIG.hexSize);
+    const row = document.createElement('div');
+    row.className = 'flex';
+    row.style.transform = `translateX(${isEven ? -HEX_W / 2 : 0}px)`;
+    row.style.marginTop = `${margin}px`;
+
+    const count = isEven ? cols + 1 : cols;
+    for (let i = 0; i < count; i++) {
+      const wrap = document.createElement('div');
+      const hex = createHexagon(CONFIG.hexSize, staticFillClass, hoverFillClass);
+      wrap.appendChild(hex);
+      row.appendChild(wrap);
+    }
+    return row;
+  }
+
+  function getOrCreateContainer() {
+    let container = document.getElementById('bg-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'bg-container';
+      document.body.appendChild(container);
+    } else if (container.parentNode !== document.body) {
+      // Ensure container lives directly under body as requested
+      document.body.appendChild(container);
+    }
+    container.className = `fixed inset-0 overflow-hidden pointer-events-none ${CONFIG.containerBgClass} z-0`;
+    return container;
+  }
+
+  function render() {
+    const container = getOrCreateContainer();
+    container.innerHTML = '';
+
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const cols = Math.ceil(viewportWidth / HEX_W) + 2;
+    const rows = Math.ceil(viewportHeight / VERTICAL_SPACING) + 1;
+
+    for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+      const hoverClass = CONFIG.paletteFillClasses[rowIndex % CONFIG.paletteFillClasses.length];
+      const row = createHexagonRow(
+        cols,
+        rowIndex % 2 === 1,
+        CONFIG.staticFillClass,
+        hoverClass
+      );
+      container.appendChild(row);
+    }
+  }
+
+  async function init() {
+    try { await ensureTailwind(); } catch (_) {}
+    document.body.classList.add('overflow-hidden');
+    render();
+    window.addEventListener('resize', render);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+
+  window.createHexagonBackground = render;
+})();
+
