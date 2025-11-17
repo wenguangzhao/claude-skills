@@ -52,6 +52,7 @@
           "transition-colors",
           "ease-out",
           "ease-in",
+          "ease-linear",
           "duration-150",
           "duration-[1500ms]",
           "fixed",
@@ -122,13 +123,25 @@
     polygon.style.pointerEvents = "fill";
 
     polygon.addEventListener("mouseenter", () => {
-      polygon.classList.remove(staticFillClass, "duration-[1500ms]", "ease-in");
+      polygon.classList.remove(
+        staticFillClass,
+        "duration-[1500ms]",
+        "ease-in",
+        "ease-linear",
+        "ease-out"
+      );
       polygon.classList.add(hoverFillClass, "duration-150", "ease-out");
     });
 
     polygon.addEventListener("mouseleave", () => {
-      polygon.classList.remove(hoverFillClass, "duration-150", "ease-out");
-      polygon.classList.add(staticFillClass, "duration-[1500ms]", "ease-in");
+      polygon.classList.remove(
+        hoverFillClass,
+        "duration-150",
+        "ease-out",
+        "ease-in",
+        "ease-linear"
+      );
+      polygon.classList.add(staticFillClass, "duration-[1500ms]", "ease-linear");
     });
 
     svg.appendChild(polygon);
