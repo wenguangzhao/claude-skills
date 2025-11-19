@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ファンコントローラー比較</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      }
+
+      .iframe-container {
+        width: 100vw;
+        min-height: 700px;
+        height: 700px;
+        border: none;
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col">
+    <header
+      class="w-full bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm py-4 px-6 sticky top-0 z-50"
+    >
+      <h1 class="text-2xl font-bold text-slate-800 text-center">
+        ファンコントローラー比較デモ
+      </h1>
+      <p class="text-sm text-slate-500 text-center mt-1">
+        2つの異なるデザインを比較してください
+      </p>
+    </header>
+
+    <main class="flex-1 flex flex-col">
+      <section class="flex-1 relative">
+        <div
+          class="absolute top-4 left-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-10"
+        >
+          <h2 class="text-lg font-semibold">デザイン 1: Claude</h2>
+        </div>
+        <iframe
+          src="claude.html"
+          class="iframe-container"
+          title="Claude ファンコントローラー"
+          allowfullscreen
+        >
+        </iframe>
+      </section>
+
+      <div
+        class="w-full h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"
+      ></div>
+
+      <section class="flex-1 relative">
+        <div
+          class="absolute top-4 left-4 bg-purple-500 text-white px-6 py-3 rounded-lg shadow-lg z-10"
+        >
+          <h2 class="text-lg font-semibold">デザイン 2: Gemini</h2>
+        </div>
+        <iframe
+          src="gemini.html"
+          class="iframe-container"
+          title="Gemini ファンコントローラー"
+          allowfullscreen
+        >
+        </iframe>
+      </section>
+    </main>
+
+    <footer
+      class="w-full bg-white/60 backdrop-blur-sm border-t border-slate-200 py-3 px-6"
+    >
+      <p class="text-xs text-slate-500 text-center">
+        上下にスクロールして2つのデザインを比較できます
+      </p>
+    </footer>
+  </body>
+</html>

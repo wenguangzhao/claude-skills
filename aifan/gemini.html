@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroFlow 3D Smart Fan</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* --- 3D Environment Setup --- */
+        .scene {
+            perspective: 1000px; /* Creates the 3D depth */
+        }
+        
+        .fan-assembly {
+            transform-style: preserve-3d;
+            transition: transform 0.1s; /* Smooth manual movement if needed */
+        }
+
+        /* --- Animations --- */
+        @keyframes spin {
+            from { transform: translateZ(10px) rotate(0deg); }
+            to { transform: translateZ(10px) rotate(360deg); }
+        }
+
+        /* Realistic Head Shaking (Rotation around Y axis) */
+        @keyframes oscillate {
+            0% { transform: rotateY(-35deg); }
+            100% { transform: rotateY(35deg); }
+        }
+
+        .animate-spin-blade {
+            animation: spin linear infinite;
+        }
+
+        .animate-oscillate {
+            animation: oscillate 4s ease-in-out infinite alternate;
+            transform-origin: center 300px; /* Pivot around the neck connection */
+        }
+
+        /* --- Fan Component Styles --- */
+        
+        /* The Cage Mesh Effect using CSS Gradients */
+        .cage-mesh {
+            background: 
+                radial-gradient(circle, transparent 60%, rgba(100,116,139,0.1) 61%),
+                conic-gradient(from 0deg, transparent 0deg, rgba(148,163,184,0.3) 2deg, transparent 3deg),
+                repeating-radial-gradient(transparent 0, transparent 10px, rgba(148,163,184,0.2) 11px, transparent 12px);
+            background-size: 100% 100%, 100% 100%, 100% 100%;
+            border: 2px solid #cbd5e1;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        /* Metallic Blade Look */
+        .blade-color {
+            fill: url(#bladeGradient);
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px; width: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #3b82f6;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin-top: -10px;
+            cursor: grab;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            background: #e2e8f0; border-radius: 2px;
+        }
+
+        /* LED Glow */
+        .led-glow {
+            box-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-[#f0f4f8] text-slate-800 h-screen w-full flex items-center justify-center select-none overflow-hidden">
+
+    <div class="w-full max-w-6xl h-[85vh] bg-white rounded-[40px] shadow-2xl flex overflow-hidden border border-slate-100 relative">
+        
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-50 pointer-events-none"></div>
+
+        <div class="w-full md:w-3/5 relative flex items-end justify-center pb-10 bg-gradient-to-b from-slate-50 to-slate-200 scene z-10">
+            
+            <div class="absolute bottom-10 flex flex-col items-center z-0">
+                <div class="w-4 h-48 bg-gradient-to-r from-slate-400 to-slate-300 rounded-full relative z-10 top-4"></div>
+                <div class="w-48 h-12 bg-white rounded-[50%] border border-slate-200 shadow-[0_10px_30px_rgba(0,0,0,0.1)] bg-gradient-to-b from-slate-100 to-slate-300 relative z-0">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-slate-200/50 rounded-full blur-sm"></div>
+                </div>
+                <div class="w-64 h-4 bg-black/10 rounded-[100%] blur-lg mt-[-10px]"></div>
+            </div>
+
+            <div id="fan-head-wrapper" class="relative w-[340px] h-[340px] mb-[170px] fan-assembly preserve-3d origin-bottom">
+                
+                <div class="absolute inset-0 m-auto w-40 h-40 bg-slate-700 rounded-full translate-z-[-40px] shadow-xl"></div>
+                
+                <div class="absolute inset-0 w-full h-full rounded-full border-2 border-slate-300 bg-slate-100/10 translate-z-[-10px]">
+                    <div class="w-full h-full opacity-20 bg-[repeating-conic-gradient(#000_0_1deg,transparent_1deg_10deg)] rounded-full"></div>
+                </div>
+
+                <div id="fan-blades" class="absolute inset-0 flex items-center justify-center translate-z-[10px]">
+                    <svg width="320" height="320" viewBox="0 0 320 320" class="drop-shadow-xl">
+                        <defs>
+                            <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#93c5fd;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <g transform="translate(160, 160)">
+                            <path d="M0,0 C10,-30 60,-80 100,-50 C130,-20 130,20 100,50 C50,80 0,20 0,0" class="blade-color" transform="rotate(0)"/>
+                            <path d="M0,0 C10,-30 60,-80 100,-50 C130,-20 130,20 100,50 C50,80 0,20 0,0" class="blade-color" transform="rotate(72)"/>
+                            <path d="M0,0 C10,-30 60,-80 100,-50 C130,-20 130,20 100,50 C50,80 0,20 0,0" class="blade-color" transform="rotate(144)"/>
+                            <path d="M0,0 C10,-30 60,-80 100,-50 C130,-20 130,20 100,50 C50,80 0,20 0,0" class="blade-color" transform="rotate(216)"/>
+                            <path d="M0,0 C10,-30 60,-80 100,-50 C130,-20 130,20 100,50 C50,80 0,20 0,0" class="blade-color" transform="rotate(288)"/>
+                            <circle r="25" fill="#1e293b" stroke="#475569" stroke-width="3"/>
+                            <text x="0" y="4" text-anchor="middle" fill="white" font-size="8" font-family="sans-serif" font-weight="bold">AERO</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="absolute inset-0 w-full h-full rounded-full cage-mesh translate-z-[30px]">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white/80 backdrop-blur rounded-full flex items-center justify-center border border-slate-200 shadow-sm">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="w-full md:w-2/5 bg-white p-12 flex flex-col justify-center relative z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.02)]">
+            
+            <div class="mb-12">
+                <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Device Connected</span>
+                <h1 class="text-4xl font-bold text-slate-900 mt-4 mb-2">Living Room Fan</h1>
+                <p class="text-slate-400">Manage your home climate.</p>
+            </div>
+
+            <div class="space-y-10">
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-800">Power</h3>
+                        <p class="text-sm text-slate-400" id="power-status">Device is currently off</p>
+                    </div>
+                    <button id="btn-power" class="w-16 h-9 bg-slate-200 rounded-full relative transition-colors duration-300 focus:outline-none">
+                        <div class="absolute left-1 top-1 w-7 h-7 bg-white rounded-full shadow-md transform transition-transform duration-300 scale-90" id="btn-power-circle"></div>
+                    </button>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <div class="opacity-50 transition-opacity duration-300" id="control-speed">
+                    <div class="flex justify-between mb-4">
+                        <label class="font-bold text-slate-800">Fan Speed</label>
+                        <span class="font-mono text-blue-600 font-bold" id="val-speed">0%</span>
+                    </div>
+                    <div class="relative h-6 flex items-center">
+                        <input type="range" min="1" max="100" value="0" class="relative z-10 w-full" id="input-speed" disabled>
+                        <div class="absolute top-1/2 left-0 w-full h-1 bg-slate-100 rounded -translate-y-1/2">
+                            <div id="bar-speed" class="h-full bg-blue-500 rounded w-0 transition-all duration-100"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-2 text-xs text-slate-400 font-medium">
+                        <span>Low</span>
+                        <span>Turbo</span>
+                    </div>
+                </div>
+
+                <div class="opacity-50 transition-opacity duration-300" id="control-oscillate">
+                    <button id="btn-oscillate" class="w-full flex items-center justify-between p-4 border border-slate-200 rounded-2xl hover:border-blue-300 hover:bg-blue-50 transition-all group" disabled>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-blue-500 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-bold text-slate-800">Oscillation</h4>
+                                <p class="text-xs text-slate-400">Wide angle mode</p>
+                            </div>
+                        </div>
+                        <div class="w-4 h-4 rounded-full border-2 border-slate-300" id="indicator-oscillate"></div>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /* --- Logic --- */
+        const state = {
+            on: false,
+            speed: 0,
+            oscillating: false
+        };
+
+        const dom = {
+            headWrapper: document.getElementById('fan-head-wrapper'),
+            blades: document.getElementById('fan-blades'),
+            btnPower: document.getElementById('btn-power'),
+            btnPowerCircle: document.getElementById('btn-power-circle'),
+            powerStatus: document.getElementById('power-status'),
+            controlSpeed: document.getElementById('control-speed'),
+            inputSpeed: document.getElementById('input-speed'),
+            valSpeed: document.getElementById('val-speed'),
+            barSpeed: document.getElementById('bar-speed'),
+            controlOsc: document.getElementById('control-oscillate'),
+            btnOsc: document.getElementById('btn-oscillate'),
+            indicatorOsc: document.getElementById('indicator-oscillate')
+        };
+
+        function updateEngine() {
+            // 1. Blade Speed
+            if (state.on && state.speed > 0) {
+                const duration = Math.max(0.1, 1.5 - (state.speed / 80));
+                dom.blades.classList.add('animate-spin-blade');
+                dom.blades.style.animationDuration = `${duration}s`;
+            } else {
+                // Stop animation but keep rotation? CSS animation reset is easiest here
+                dom.blades.classList.remove('animate-spin-blade');
+            }
+
+            // 2. Oscillation
+            if (state.on && state.oscillating) {
+                dom.headWrapper.classList.add('animate-oscillate');
+            } else {
+                dom.headWrapper.classList.remove('animate-oscillate');
+            }
+        }
+
+        function renderUI() {
+            // Power UI
+            if (state.on) {
+                dom.btnPower.classList.replace('bg-slate-200', 'bg-blue-500');
+                dom.btnPowerCircle.classList.replace('left-1', 'left-8');
+                dom.powerStatus.innerText = "Device is running";
+                dom.powerStatus.classList.add('text-blue-500');
+                
+                // Unlock controls
+                dom.controlSpeed.classList.remove('opacity-50');
+                dom.inputSpeed.disabled = false;
+                dom.controlOsc.classList.remove('opacity-50');
+                dom.btnOsc.disabled = false;
+            } else {
+                dom.btnPower.classList.replace('bg-blue-500', 'bg-slate-200');
+                dom.btnPowerCircle.classList.replace('left-8', 'left-1');
+                dom.powerStatus.innerText = "Device is currently off";
+                dom.powerStatus.classList.remove('text-blue-500');
+
+                // Lock controls
+                dom.controlSpeed.classList.add('opacity-50');
+                dom.inputSpeed.disabled = true;
+                dom.controlOsc.classList.add('opacity-50');
+                dom.btnOsc.disabled = true;
+                
+                // Reset logic
+                state.oscillating = false;
+            }
+
+            // Speed UI
+            dom.inputSpeed.value = state.speed;
+            dom.valSpeed.innerText = state.speed + '%';
+            dom.barSpeed.style.width = state.speed + '%';
+
+            // Oscillation UI
+            if (state.oscillating) {
+                dom.btnOsc.classList.add('border-blue-500', 'bg-blue-50');
+                dom.indicatorOsc.classList.replace('border-slate-300', 'bg-blue-500');
+                dom.indicatorOsc.classList.add('border-blue-500');
+            } else {
+                dom.btnOsc.classList.remove('border-blue-500', 'bg-blue-50');
+                dom.indicatorOsc.classList.replace('bg-blue-500', 'border-slate-300');
+                dom.indicatorOsc.classList.remove('border-blue-500');
+            }
+        }
+
+        // Events
+        dom.btnPower.addEventListener('click', () => {
+            state.on = !state.on;
+            if (state.on && state.speed === 0) state.speed = 30; // Jump start
+            renderUI();
+            updateEngine();
+        });
+
+        dom.inputSpeed.addEventListener('input', (e) => {
+            state.speed = parseInt(e.target.value);
+            renderUI();
+            updateEngine();
+        });
+
+        dom.btnOsc.addEventListener('click', () => {
+            state.oscillating = !state.oscillating;
+            renderUI();
+            updateEngine();
+        });
+
+        // Init
+        renderUI();
+
+    </script>
+</body>
+</html>
