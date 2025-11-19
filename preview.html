@@ -6,7 +6,6 @@
     <title>HTML即時プレビュー</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-      /* 簡單的淡入淡出動畫 */
       .fade-enter {
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
@@ -14,7 +13,6 @@
       .fade-enter-active {
         opacity: 1;
       }
-      /* 編輯器字體 */
       textarea {
         font-family: "Menlo", "Monaco", "Courier New", monospace;
       }
@@ -109,7 +107,6 @@
     </div>
 
     <script>
-      // 為了讓用戶貼的代碼也能用 Tailwind，我們定義這個 script 標籤
       const TAILWIND_SCRIPT =
         '<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>';
 
@@ -119,20 +116,15 @@
         const previewContainer = document.getElementById("preview-container");
         const iframe = document.getElementById("preview-frame");
 
-        // 組合 HTML：確保 Tailwind 腳本在裡面
-        // 如果用戶貼了完整的 <html>，我們嘗試插入 script
-        // 如果用戶只貼了片段 (例如 div)，我們包裝一下
         let finalHtml = "";
 
         if (codeInput.toLowerCase().includes("<html")) {
-          // 簡單地注入腳本到 head 結束前，或者 body 開始前
           if (codeInput.toLowerCase().includes("<head>")) {
             finalHtml = codeInput.replace("<head>", "<head>" + TAILWIND_SCRIPT);
           } else {
             finalHtml = TAILWIND_SCRIPT + codeInput;
           }
         } else {
-          // 用戶只貼了片段
           finalHtml = `
                     <!DOCTYPE html>
                     <html lang="ja">
@@ -148,10 +140,8 @@
                 `;
         }
 
-        // 寫入 Iframe
         iframe.srcdoc = finalHtml;
 
-        // 切換 UI
         editorContainer.classList.add("hidden");
         previewContainer.classList.remove("hidden");
       }
@@ -161,15 +151,12 @@
         const previewContainer = document.getElementById("preview-container");
         const iframe = document.getElementById("preview-frame");
 
-        // 切換回編輯模式
         previewContainer.classList.add("hidden");
         editorContainer.classList.remove("hidden");
 
-        // 清空 iframe 釋放資源
         iframe.srcdoc = "";
       }
 
-      // 支援鍵盤快捷鍵 (Ctrl/Cmd + Enter 執行)
       document
         .getElementById("code-input")
         .addEventListener("keydown", function (e) {
